@@ -90,9 +90,13 @@ class Pigboy(pygame.sprite.Sprite):
 
         # if self.rect.y >= (self.g_sets.screen_height - self.rect.height):
         #    self.falling = False
-        if self.rect.colliderect(platform.rect):
+        #if self.rect.colliderect(platform.rect):
+            # self.falling = False
+            # self.y = (platform.rect.y-g_sets.p1_h)
+        if self.rect.y >= (self.g_sets.screen_height - self.rect.height):
+            self.rect.y = (self.g_sets.screen_height - self.rect.height)
             self.falling = False
-            self.y = (platform.rect.y-g_sets.p1_h)
+            self.g_sets.pig_jump_velocity = self.g_sets.pig_jump_cap
 
     def jump(self):
         """Make Pigboy jump when the space bar is pressed."""

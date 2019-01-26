@@ -24,6 +24,6 @@ class Settings():
         self.p1_imgw = 0
         self.p1_imgh = 0
         self.p1_img_path = 'platform_test.bmp'
-        self.p1_w = 600
+        self.p1_w = 100
         self.p1_h = 100
         self.p1_color = (10, 100, 200)
