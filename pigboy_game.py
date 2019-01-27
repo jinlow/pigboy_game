@@ -22,11 +22,6 @@ def run_game():
     while True:
         # Watch for keyboard and mouse events.
         gf.check_events(g_sets, pigboy)
-        #gf.update_collisions(pigboy, platform)
-        pigboy.update()
-        pigboy.gravity(platform, g_sets)
-        pigboy.jump()
-        pigboy.animate()
         gf.update_screen(g_sets, screen, pigboy, platform)
         clock.tick(g_sets.fps)
 run_game()

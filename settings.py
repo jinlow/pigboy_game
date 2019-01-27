@@ -11,8 +11,8 @@ class Settings():
 
         # Pigboy settings
         self.pig_walk_velocity = 6
-        self.pig_jump_velocity = 8
-        self.pig_mass = 3
+        self.pig_jump_velocity = 35
+        self.pig_mass = 2
         self.pig_jump_decay = 1
         self.pig_jump_cap = 8
         self.pig_run_factor = 3

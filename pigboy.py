@@ -61,10 +61,13 @@ class Pigboy(pygame.sprite.Sprite):
         self.running = False
 
         # Falling Flag
-        self.falling = True
+        self.falling = False
 
-    def update(self):
-        """Update pigboys position based on the movement flag."""
+        # Falling force
+        self.moving_y = 0
+
+    def walking(self):
+        "Make that pig walk... or run."
         # Run faster if SHIFT key is pressed...
         if self.running:
             if self.moving_right and self.rect.right < self.screen_rect.right:
@@ -78,48 +81,41 @@ class Pigboy(pygame.sprite.Sprite):
                 self.center -= self.g_sets.pig_walk_velocity
         self.rect.centerx = self.center
 
+
+    def update(self):
+        """Update pigboys position based on the movement flag."""
+
+        # Animation
+        self.animate()
+
+        # Pigboy motion
+        self.gravity()
+        self.jump()
+        self.walking()
         # Collision with platforms (later enemies)
 
-    def gravity(self, platform, g_sets):
-        """ Check if player is falling """
-        if self.falling:
-            Frce = - ( 0.5 * self.g_sets.pig_mass *
-                    (self.g_sets.pig_jump_velocity**2))
+    def gravity(self):
+        """ Enact gravity on the pig """
+        if self.moving_y == 0:
+             self.moving_y = 1
+        else:
 
-            self.rect.y -= Frce
+            self.moving_y += 2
 
-        # if self.rect.y >= (self.g_sets.screen_height - self.rect.height):
-        #    self.falling = False
-        #if self.rect.colliderect(platform.rect):
-            # self.falling = False
-            # self.y = (platform.rect.y-g_sets.p1_h)
-        if self.rect.y >= (self.g_sets.screen_height - self.rect.height):
+        if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
             self.rect.y = (self.g_sets.screen_height - self.rect.height)
-            self.falling = False
-            self.g_sets.pig_jump_velocity = self.g_sets.pig_jump_cap
+            self.moving_y = 0
+            #self.falling = False
+            self.jumping = False
+
+        # Enact gravity
+        self.rect.y += self.moving_y
 
     def jump(self):
         """Make Pigboy jump when the space bar is pressed."""
         if self.jumping_up:
-            if self.g_sets.pig_jump_velocity > 0:
-                Frce = ( 0.5 * self.g_sets.pig_mass *
-                        (self.g_sets.pig_jump_velocity**2))
-            else:
-                Frce = - ( 0.5 * self.g_sets.pig_mass *
-                        (self.g_sets.pig_jump_velocity**2))
-
-            # Change Position
-            self.rect.y -= Frce
-
-            # Change velocity
-            self.g_sets.pig_jump_velocity = (self.g_sets.pig_jump_velocity -
-                                             self.g_sets.pig_jump_decay)
-
-            # If ground is reached reset variables.
-            if self.rect.y >= (self.g_sets.screen_height - self.rect.height):
-                self.rect.y = (self.g_sets.screen_height - self.rect.height)
-                self.jumping_up = False
-                self.g_sets.pig_jump_velocity = self.g_sets.pig_jump_cap
+            self.moving_y = - self.g_sets.pig_jump_velocity
+            self.jumping_up = False
 
             # Collision
     # def hiting_things(self):
@@ -131,7 +127,7 @@ class Pigboy(pygame.sprite.Sprite):
     def animate(self):
         """Animate Pigboys walking/jumping"""
         if self.facing_right:
-            if self.moving_right and not(self.jumping_up):
+            if self.moving_right and self.rect.y >= (self.g_sets.screen_height - self.rect.height):
                 self.index += 1
                 if self.index >= len(self.images):
                     self.index = 0
@@ -141,7 +137,7 @@ class Pigboy(pygame.sprite.Sprite):
                 self.image = self.images[self.index]
 
         else:
-            if self.moving_left and not(self.jumping_up):
+            if self.moving_left and self.rect.y >= (self.g_sets.screen_height - self.rect.height):
                 self.index += 1
                 if self.index >= len(self.images):
                     self.index = 0

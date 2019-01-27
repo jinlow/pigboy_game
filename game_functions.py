@@ -39,6 +39,10 @@ def check_events(g_sets, pigboy):
 
 def update_screen(g_sets, screen, pigboy, platform):
     """Update images on the screen and flip to the new screen."""
+
+    # Update Pigboy
+    pigboy.update()
+
     # Redraw the screen during each pass through the loop.
     screen.fill(g_sets.bg_color)
     pigboy.blitme()
