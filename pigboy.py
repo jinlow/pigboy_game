@@ -16,22 +16,7 @@ class Pigboy(pygame.sprite.Sprite):
 
         # Load all images for animation
         self.images = []
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving0R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving1R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving2R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving3R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving4R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving5R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving6R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving7R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving8R.bmp"))
-        self.images.append(pygame.image.load("images/pg/moving_right/pg_moving9R.bmp"))
-        # self.pathnames = glob.glob("images/pg/moving_right/pg_moving*")
-        # self.pathnames.sort()
-        #
-        # self.upload_images()
-        # for path in self.pathnames:
-        #     self.images.append(pygame.image.load(path)
+        self.upload_images()
 
         # Set the initial index for the image
         self.index = 0
@@ -60,11 +45,28 @@ class Pigboy(pygame.sprite.Sprite):
 
         self.running = False
 
-        # Falling Flag
-        self.falling = False
-
         # Falling force
         self.moving_y = 0
+
+    def upload_images(self):
+        """ Append animation images. """
+        img_pathnames = glob.glob("images/pg/moving_right/pg_moving*")
+        img_pathnames.sort()
+
+        for path in img_pathnames:
+            self.images.append(pygame.image.load(path))
+
+    def update(self):
+        """Update pigboys position based on the movement flag."""
+
+        # Animation
+        self.animate()
+
+        # Pigboy motion
+        self.gravity()
+        self.jump()
+        self.walking()
+        # Collision with platforms (later enemies)
 
     def walking(self):
         "Make that pig walk... or run."
@@ -81,19 +83,6 @@ class Pigboy(pygame.sprite.Sprite):
                 self.center -= self.g_sets.pig_walk_velocity
         self.rect.centerx = self.center
 
-
-    def update(self):
-        """Update pigboys position based on the movement flag."""
-
-        # Animation
-        self.animate()
-
-        # Pigboy motion
-        self.gravity()
-        self.jump()
-        self.walking()
-        # Collision with platforms (later enemies)
-
     def gravity(self):
         """ Enact gravity on the pig """
         if self.moving_y == 0:
@@ -105,7 +94,6 @@ class Pigboy(pygame.sprite.Sprite):
         if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
             self.rect.y = (self.g_sets.screen_height - self.rect.height)
             self.moving_y = 0
-            #self.falling = False
             self.jumping = False
 
         # Enact gravity

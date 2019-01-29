@@ -16,7 +16,7 @@ class Settings():
         self.pig_jump_decay = 1
         self.pig_jump_cap = 8
         self.pig_run_factor = 3
-        self.pg_start_height = 200
+        self.pg_start_height = 700
 
         # Platform #1 Settings
         self.p1_xloc  = 400

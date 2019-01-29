@@ -52,11 +52,9 @@ def update_screen(g_sets, screen, pigboy, platform):
     pygame.display.flip()
 
 def update_collisions(pigboy, platform):
-    """
-        Check for collisions, and reset Pigboy movement
-        when something is hit.
-    """
+    """ Check for collisions, and reset Pigboy movement
+        when something is hit. """
     collisions = pygame.sprite.groupcollide(pigboy, platform, True, True)
 
     if collisions:
-        pigboy.falling = False
+        pigboy.moving_y = False
