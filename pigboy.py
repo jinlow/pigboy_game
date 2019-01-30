@@ -5,15 +5,14 @@ import glob
 class Pigboy(pygame.sprite.Sprite):
     """ Class to define the game character Pigboy."""
 
-    def __init__(self, screen, g_sets):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, screen, g_sets, platforms):
+
+        super().__init__()
+
         """Initialize Pigboy"""
         self.screen = screen
         self.g_sets = g_sets
-
-        # # Load image and get rect
-        # self.image = pygame.image.load("images/pg/pg_sketch_flat_small.bmp")
-
+        
         # Load all images for animation
         self.images = []
         self.upload_images()
@@ -48,6 +47,9 @@ class Pigboy(pygame.sprite.Sprite):
         # Falling force
         self.moving_y = 0
 
+        # Set plaforms
+        self.platforms = platforms
+
     def upload_images(self):
         """ Append animation images. """
         img_pathnames = glob.glob("images/pg/moving_right/pg_moving*")
@@ -63,10 +65,23 @@ class Pigboy(pygame.sprite.Sprite):
         self.animate()
 
         # Pigboy motion
-        self.gravity()
         self.jump()
+        self.gravity()
         self.walking()
-        # Collision with platforms (later enemies)
+
+        # Check for collisions
+        obj_hit_list = pygame.sprite.spritecollide(self, self.platforms, False)
+        for platform in obj_hit_list:
+
+            # Reset our position based on the top/bottom of the object.
+            if self.moving_y > 0:
+                self.rect.bottom = platform.rect.top
+            elif self.moving_y < 0:
+                self.rect.top = platform.rect.bottom
+
+            # Stop our vertical movement
+            self.moving_y= 0
+
 
     def walking(self):
         "Make that pig walk... or run."
@@ -94,7 +109,6 @@ class Pigboy(pygame.sprite.Sprite):
         if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
             self.rect.y = (self.g_sets.screen_height - self.rect.height)
             self.moving_y = 0
-            self.jumping = False
 
         # Enact gravity
         self.rect.y += self.moving_y
@@ -105,17 +119,10 @@ class Pigboy(pygame.sprite.Sprite):
             self.moving_y = - self.g_sets.pig_jump_velocity
             self.jumping_up = False
 
-            # Collision
-    # def hiting_things(self):
-    #     """Check if we hit anything and adjust position accordingly."""
-    #     block_hit_list = pygame.sprite.spritecollide(self, self.level.platform_list, False)
-    #     for block in block_hit_list
-
-
     def animate(self):
         """Animate Pigboys walking/jumping"""
         if self.facing_right:
-            if self.moving_right and self.rect.y >= (self.g_sets.screen_height - self.rect.height):
+            if self.moving_right:
                 self.index += 1
                 if self.index >= len(self.images):
                     self.index = 0
@@ -125,7 +132,7 @@ class Pigboy(pygame.sprite.Sprite):
                 self.image = self.images[self.index]
 
         else:
-            if self.moving_left and self.rect.y >= (self.g_sets.screen_height - self.rect.height):
+            if self.moving_left:
                 self.index += 1
                 if self.index >= len(self.images):
                     self.index = 0

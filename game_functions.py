@@ -10,7 +10,8 @@ def key_down(g_sets, pigboy, event):
     elif event.key == pygame.K_LEFT:
         pigboy.moving_left = True
         pigboy.facing_right = False
-    elif not(pigboy.jumping_up) and event.key == pygame.K_SPACE:
+    elif (not(pigboy.jumping_up) and
+    event.key == pygame.K_SPACE and pigboy.moving_y == 0):
         pigboy.jumping_up = True
     # Check for running
     if event.key == pygame.K_RSHIFT or event.key == pygame.K_LSHIFT:
@@ -37,7 +38,7 @@ def check_events(g_sets, pigboy):
         elif event.type == pygame.KEYUP:
             key_up(g_sets, pigboy, event)
 
-def update_screen(g_sets, screen, pigboy, platform):
+def update_screen(g_sets, screen, pigboy, platforms):
     """Update images on the screen and flip to the new screen."""
 
     # Update Pigboy
@@ -46,7 +47,7 @@ def update_screen(g_sets, screen, pigboy, platform):
     # Redraw the screen during each pass through the loop.
     screen.fill(g_sets.bg_color)
     pigboy.blitme()
-    platform.blitme()
+    platforms.draw(screen)
 
     # Make the most recently drawn screen visible.
     pygame.display.flip()

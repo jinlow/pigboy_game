@@ -19,11 +19,15 @@ class Settings():
         self.pg_start_height = 700
 
         # Platform #1 Settings
-        self.p1_xloc  = 400
+        self.p1_xloc  = 300
         self.p1_yloc = 500
         self.p1_imgw = 0
         self.p1_imgh = 0
         self.p1_img_path = 'platform_test.bmp'
-        self.p1_w = 100
-        self.p1_h = 100
+        self.p1_w = 150
+        self.p1_h = 50
         self.p1_color = (10, 100, 200)
+
+        self.platform_list = [[400, 450, 150, 50],
+                              [100, 500, 150, 50],
+                              [800, 500, 150, 50]]
