@@ -12,7 +12,7 @@ class Pigboy(pygame.sprite.Sprite):
         """Initialize Pigboy"""
         self.screen = screen
         self.g_sets = g_sets
-        
+
         # Load all images for animation
         self.images = []
         self.upload_images()
@@ -104,7 +104,7 @@ class Pigboy(pygame.sprite.Sprite):
              self.moving_y = 1
         else:
 
-            self.moving_y += 2
+            self.moving_y += 4
 
         if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
             self.rect.y = (self.g_sets.screen_height - self.rect.height)

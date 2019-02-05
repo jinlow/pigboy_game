@@ -59,3 +59,35 @@ def update_collisions(pigboy, platform):
 
     if collisions:
         pigboy.moving_y = False
+
+def shift_screen(screen_shift, diff, platforms):
+    """ Shift the screen when the pig moves off screen. """
+
+    screen_shift += diff
+
+    for platform in platforms:
+        platform.rect.x += diff
+
+def screen_respond(screen_shift, platforms, pigboy, g_sets):
+    """ Make screen respond to pigbpy. """
+
+    right_cut = g_sets.screen_width - 60
+    left_cut = 60
+
+    # Getting close to right of screen
+    if pigboy.rect.right >= right_cut:
+        diff = pigboy.rect.right - right_cut
+        pigboy.rect.right = right_cut
+        shift_screen(screen_shift, -diff, platforms)
+
+    # Getting close to left of screen
+    if pigboy.rect.left <= left_cut:
+        diff = left_cut - pigboy.rect.left
+        pigboy.rect.left = left_cut
+        shift_screen(screen_shift, diff, platforms)
+
+    # current_position = pigboy.rect.x + world_shift
+    # if pigboy.rect.right <= left_cut:
+    #     diff = right_cut - pigboy.rect.right
+    #     pigboy.rect.right = right_cut
+    #     shift_screen(shift_x, platforms)

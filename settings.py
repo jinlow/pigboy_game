@@ -10,13 +10,13 @@ class Settings():
         self.fps = 60
 
         # Pigboy settings
-        self.pig_walk_velocity = 6
-        self.pig_jump_velocity = 35
+        self.pig_walk_velocity = 10
+        self.pig_jump_velocity = 50
         self.pig_mass = 2
         self.pig_jump_decay = 1
         self.pig_jump_cap = 8
         self.pig_run_factor = 3
-        self.pg_start_height = 700
+        self.pg_start_height = 500
 
         # Platform #1 Settings
         self.p1_xloc  = 300
@@ -30,4 +30,5 @@ class Settings():
 
         self.platform_list = [[400, 450, 150, 50],
                               [100, 500, 150, 50],
-                              [800, 500, 150, 50]]
+                              [800, 500, 150, 50],
+                              [0, self.screen_height-10, self.screen_width, 10]]

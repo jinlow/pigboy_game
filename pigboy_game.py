@@ -15,6 +15,9 @@ def run_game():
         (g_sets.screen_width, g_sets.screen_height))
     pygame.display.set_caption("PB")
 
+    level_limit = -1500
+    screen_shift = 0
+
     #platform = Platform(screen, 300, 500, 150, 50)
     platforms = Group()
 
@@ -34,5 +37,6 @@ def run_game():
         # Watch for keyboard and mouse events.
         gf.check_events(g_sets, pigboy)
         gf.update_screen(g_sets, screen, pigboy, platforms)
+        #gf.screen_respond(screen_shift, platforms, pigboy, g_sets)
         clock.tick(g_sets.fps)
 run_game()
