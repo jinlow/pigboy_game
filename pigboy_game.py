@@ -37,6 +37,6 @@ def run_game():
         # Watch for keyboard and mouse events.
         gf.check_events(g_sets, pigboy)
         gf.update_screen(g_sets, screen, pigboy, platforms)
-        #gf.screen_respond(screen_shift, platforms, pigboy, g_sets)
+        # gf.screen_respond(screen_shift, platforms, pigboy, g_sets)
         clock.tick(g_sets.fps)
 run_game()
