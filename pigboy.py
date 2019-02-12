@@ -76,26 +76,29 @@ class Pigboy(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.moving_y > 0:
                 self.rect.bottom = platform.rect.top
+#               self.moving_left = False
+#               self.moving_right = False
             elif self.moving_y < 0:
                 self.rect.top = platform.rect.bottom
+#               self.moving_left = False
+#               self.moving_right = False
 
             # Stop our vertical movement
             self.moving_y= 0
 
-
     def walking(self):
-        "Make that pig walk... or run."
-        # Run faster if SHIFT key is pressed...
-        if self.running:
-            if self.moving_right and self.rect.right < self.screen_rect.right:
-                self.center += self.g_sets.pig_walk_velocity*self.g_sets.pig_run_factor
-            if self.moving_left and self.rect.left > self.screen_rect.left:
-                self.center -= self.g_sets.pig_walk_velocity*self.g_sets.pig_run_factor
-        else:
-            if self.moving_right and self.rect.right < self.screen_rect.right:
-                self.center += self.g_sets.pig_walk_velocity
-            if self.moving_left and self.rect.left > self.screen_rect.left:
-                self.center -= self.g_sets.pig_walk_velocity
+        """The action of moving Pigboy."""
+        # if self.running:
+        #     run_factor = self.g_sets.pig_run_factor
+        # else:
+        #     run_factor = 1
+        run_factor = 1
+        # Now walk
+        if self.moving_right and self.rect.right < self.screen_rect.right - 30:
+            self.center += self.g_sets.pig_walk_velocity*run_factor
+        if self.moving_left and self.rect.left > self.screen_rect.left + 30:
+           self.center -= self.g_sets.pig_walk_velocity*run_factor
+
         self.rect.centerx = self.center
 
     def gravity(self):

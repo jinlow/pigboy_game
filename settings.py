@@ -29,6 +29,6 @@ class Settings():
         self.p1_color = (10, 100, 200)
 
         self.platform_list = [[400, 450, 150, 50],
-                              [100, 500, 150, 50],
-                              [800, 500, 150, 50],
-                              [0, self.screen_height-10, self.screen_width, 10]]
+                              [100, 300, 150, 50],
+                              [800, 300, 150, 50],
+                              [-600, self.screen_height-10, self.screen_width*10, 10]]
