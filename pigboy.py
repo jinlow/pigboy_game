@@ -88,11 +88,11 @@ class Pigboy(pygame.sprite.Sprite):
 
     def walking(self):
         """The action of moving Pigboy."""
-        # if self.running:
-        #     run_factor = self.g_sets.pig_run_factor
-        # else:
-        #     run_factor = 1
-        run_factor = 1
+        if self.running:
+            run_factor = self.g_sets.pig_run_factor
+        else:
+            run_factor = 1
+
         # Now walk
         if self.moving_right and self.rect.right < self.screen_rect.right - 30:
             self.center += self.g_sets.pig_walk_velocity*run_factor
