@@ -64,11 +64,11 @@ def screen_respond(platforms, pigboy, g_sets):
     left_cut = 30
 
     # Getting close to right of screen
-    if pigboy.rect.right >= right_cut:
+    if pigboy.rect.right >= right_cut and pigboy.moving_right:
         diff = g_sets.pig_walk_velocity
         shift_screen(-diff, platforms)
 
     # Getting close to left of screen
-    if pigboy.rect.left <= left_cut:
+    if pigboy.rect.left <= left_cut and pigboy.moving_left:
         diff = g_sets.pig_walk_velocity
         shift_screen(diff, platforms)

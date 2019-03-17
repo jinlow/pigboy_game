@@ -8,7 +8,7 @@ from settings import Settings
 import game_functions as gf
 
 def run_game():
-    """Main function to run game"""
+    """ Main function to run game. """
     pygame.init()
     g_sets = Settings()
     screen = pygame.display.set_mode(

@@ -76,8 +76,9 @@ class Pigboy(pygame.sprite.Sprite):
             # Reset our position based on the top/bottom of the object.
             if self.moving_y > 0:
                 self.rect.bottom = platform.rect.top
-#               self.moving_left = False
-#               self.moving_right = False
+                # self.moving_left = False
+                # self.moving_right = False
+
             elif self.moving_y < 0:
                 self.rect.top = platform.rect.bottom
 #               self.moving_left = False
@@ -109,9 +110,9 @@ class Pigboy(pygame.sprite.Sprite):
 
             self.moving_y += 4
 
-        if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
-            self.rect.y = (self.g_sets.screen_height - self.rect.height)
-            self.moving_y = 0
+        # if self.rect.y >= (self.g_sets.screen_height - self.rect.height) and self.moving_y >= 0:
+        #     self.rect.y = (self.g_sets.screen_height - self.rect.height)
+        #     self.moving_y = 0
 
         # Enact gravity
         self.rect.y += self.moving_y
