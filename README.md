@@ -8,6 +8,6 @@ This sidescroller game follows the perilous adventures of the young swine known 
 
 ### Next Steps
 - [X] Switch main game library to pyglet
-- [] Deelop cleaner animation loop images
-- [] Create platforms and enemy class
-- [] Allow for platform jumping and gravity 
+- [ ] Deelop cleaner animation loop images
+- [ ] Create platforms and enemy class
+- [ ] Allow for platform jumping and gravity 
