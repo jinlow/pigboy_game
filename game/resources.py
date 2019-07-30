@@ -22,7 +22,14 @@ for path in image_paths:
     img.anchor_x = img.width // 2
     pigboy_imgs.append(pyglet.resource.image(path))
 
-pigboy_animation = Animation.from_image_sequence(pigboy_imgs, 1/20.0)
+pigboy_imgsL = []
+for img in pigboy_imgs:
+    pigboy_imgsL.append(img.get_transform(flip_x=True))
+
+
+
+pigboy_animationR = Animation.from_image_sequence(pigboy_imgs, 1/20.0)
+pigboy_animationL = Animation.from_image_sequence(pigboy_imgsL, 1/20.0)
 
 ### Platform Resources ###
 pltfm_short_grass = pyglet.resource.image("platform_grass.png")

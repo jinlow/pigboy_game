@@ -22,7 +22,12 @@ def collide_one_to_one(game_char, platform):
     obj_diff = game_char.position[0] - platform.position[0]
     if (abs(obj_diff) <= side_distance and
     (game_char_top > platform_bot and game_char_bot < platform_top)):
-        print("touching side")
+        # print("side col")
+        return 0
     elif (abs(obj_diff) <= side_distance and
         (game_char_top == platform_bot or game_char_bot ==  platform_top)):
-        print("touching top/bot")
+        # print("top col")
+        return 1
+    else:
+        # print("\n")
+        return -1
