@@ -10,7 +10,7 @@ main_batch = pyglet.graphics.Batch()
 #pigboy_sprite = pigboy.Pigboy(x=300, y=100, batch=main_batch)
 pigboy_sprite = pigboy.Pigboy(x=100, y=100, batch=main_batch)
 # Create platforms
-platform1 = platform.Platform(x=300, y=100, batch=main_batch)
+platform1 = platform.Platform(x=300, y=90, batch=main_batch)
 platform2 = platform.Platform(x=600, y=300, batch=main_batch)
 
 platform_list = [platform1, platform2]
@@ -26,10 +26,13 @@ def on_draw():
     main_batch.draw()
 
 def update(dt):
+    col_list = []
     for plat in platform_list:
         plat.update()
-        for obj in game_objects:
-            obj.update(dt, plat)
+        col_list.append(util.collide_one_to_one(pigboy_sprite, plat))
+    # for obj in game_objects:
+    #     obj.update(dt, col_list)
+    pigboy_sprite.update(dt, col_list)
         # util.collide_one_to_one(pigboy_sprite, plat)
 
 if __name__ == '__main__':
