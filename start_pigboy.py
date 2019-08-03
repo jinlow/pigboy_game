@@ -7,14 +7,17 @@ pyglet.gl.glClearColor(0.3,0.4,0.6,0)
 main_batch = pyglet.graphics.Batch()
 
 # Characters
-#pigboy_sprite = pigboy.Pigboy(x=300, y=100, batch=main_batch)
-pigboy_sprite = pigboy.Pigboy(x=100, y=100, batch=main_batch)
+pigboy_sprite = pigboy.Pigboy(x=600, y=100, batch=main_batch)
+# pigboy_sprite = pigboy.Pigboy(x=100, y=100, batch=main_batch)
 # Create platforms
-platform1 = platform.Platform(x=300, y=90, batch=main_batch)
-platform2 = platform.Platform(x=600, y=300, batch=main_batch)
 
-platform_list = [platform1, platform2]
+crd_list = [(300, 300)] # , (300, 200)]
+# (300, 90),
+#             (600, 20), (10, 300)
 
+platform_list = []
+for crd in crd_list:
+    platform_list.append(platform.Platform(x=crd[0], y=crd[1], batch=main_batch))
 game_objects = [pigboy_sprite]
 
 game_window.push_handlers(pigboy_sprite)
@@ -29,11 +32,12 @@ def update(dt):
     col_list = []
     for plat in platform_list:
         plat.update()
-        col_list.append(util.collide_one_to_one(pigboy_sprite, plat))
-    # for obj in game_objects:
-    #     obj.update(dt, col_list)
+        col_list.append(util.point_collide(pigboy_sprite, plat))
+        # col_list.append(util.collide_one_to_one(pigboy_sprite, plat))
+
     pigboy_sprite.update(dt, col_list)
-        # util.collide_one_to_one(pigboy_sprite, plat)
+    # print(str(pigboy_sprite.position))
+
 
 if __name__ == '__main__':
     pyglet.clock.schedule_interval(update, 1/240.0)
