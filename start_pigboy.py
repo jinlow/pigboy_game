@@ -7,11 +7,11 @@ pyglet.gl.glClearColor(0.3,0.4,0.6,0)
 main_batch = pyglet.graphics.Batch()
 
 # Characters
-pigboy_sprite = pigboy.Pigboy(x=600, y=100, batch=main_batch)
+pigboy_sprite = pigboy.Pigboy(x=300, y=300, batch=main_batch)
 # pigboy_sprite = pigboy.Pigboy(x=100, y=100, batch=main_batch)
 # Create platforms
 
-crd_list = [(300, 300)] # , (300, 200)]
+crd_list = [(300, 60), (600, 200)]
 # (300, 90),
 #             (600, 20), (10, 300)
 
@@ -32,10 +32,11 @@ def update(dt):
     col_list = []
     for plat in platform_list:
         plat.update()
+        pigboy_sprite.update(dt, plat)
         col_list.append(util.point_collide(pigboy_sprite, plat))
         # col_list.append(util.collide_one_to_one(pigboy_sprite, plat))
 
-    pigboy_sprite.update(dt, col_list)
+    # pigboy_sprite.update(dt, col_list)
     # print(str(pigboy_sprite.position))
 
 
