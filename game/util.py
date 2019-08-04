@@ -38,14 +38,6 @@ def point_collide(gamechr, plat):
     gpts = object_points(gamechr)
     ppts = object_points(plat)
 
-    print(gpts, end="")
-    print(" pig")
-    print(ppts, end="")
-    print(" plat")
-
-    # side_col = (gpts[1][1] > ppts[0][0] and
-    #             gpts[1][0]
-
     x_overlap = not (gpts[0][0] > ppts[1][0] or
                      gpts[1][0] < ppts[0][0])
 
