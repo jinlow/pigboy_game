@@ -25,10 +25,11 @@ def on_draw():
     main_batch.draw()
 
 def update(dt):
-    col_list = []
+    # pigboy_sprite.update(dt, platform_list)
     for plat in platform_list:
         plat.update()
         pigboy_sprite.update(dt, plat)
+
 
 if __name__ == '__main__':
     pyglet.clock.schedule_interval(update, 1/240.0)

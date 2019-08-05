@@ -22,9 +22,10 @@ class Pigboy(pyglet.sprite.Sprite):
         self.jump_force = 0
         self.collision_id = None
         self.side_collision = False
+        self.new_collision = False
 
     def update(self, dt, plat):
-        print(self.fall_init)
+        #print(self.fall_init)
         plat_collision = self.collide(plat)
         # self.fly(dt)
         self.jump(dt)
@@ -40,9 +41,8 @@ class Pigboy(pyglet.sprite.Sprite):
         """Allow pig to walk, and control animation"""
         # If a new collision happens, stop walking
         if self.key_handler[key.RIGHT]:
-            if (plat_collision and (self.collision_id != plat.platform_id)
-            and (self.collision_id is not None)):
-                self.x -= (walk_speed + 2)
+            if self.new_collision and self.fall_init < 0.5:
+                self.x -= walk_speed
                 walk_speed = 0
                 self.side_collision = True
             self.x += walk_speed
@@ -52,9 +52,8 @@ class Pigboy(pyglet.sprite.Sprite):
             self.facing_right = True
 
         if self.key_handler[key.LEFT]:
-            if (plat_collision and (self.collision_id != plat.platform_id)
-            and (self.collision_id is not None)):
-                self.x += (walk_speed + 2)
+            if self.new_collision and self.fall_init < 0.5:
+                self.x += walk_speed
                 walk_speed = 0
                 self.side_collision = True
             self.x -= walk_speed
@@ -87,7 +86,6 @@ class Pigboy(pyglet.sprite.Sprite):
         if self.jump_force > 0:
             self.y += self.jump_force
             self.jump_force -= 0.1
-            print("jumping")
         else:
             self.jumping = False
             self.jump_force = 0
@@ -105,4 +103,11 @@ class Pigboy(pyglet.sprite.Sprite):
 
     def collide(self, plat):
         """Check for collision and handle"""
-        return util.point_collide(self, plat)
+        collision = util.point_collide(self, plat)
+        if collision:
+            if plat.platform_id != self.collision_id:
+                self.new_collision = True
+            else:
+                self.new_collision = False
+            self.collision_id = plat.platform_id
+        return collision
