@@ -12,7 +12,7 @@ class Pigboy(pyglet.sprite.Sprite):
         self.velocity_x, self.velocity_y = 0.0, 0.0
         self.colR = False
         self.colL = False
-        self.walk_speed = 2
+        self.walk_speed = 4
         self.run_speed = 2
         self.key_handler = key.KeyStateHandler()
         self.facing_right = True
@@ -20,46 +20,62 @@ class Pigboy(pyglet.sprite.Sprite):
         self.fall_init = 0
         self.jumping = False
         self.jump_force = 0
-        self.collision_id = None
-        self.side_collision = False
-        self.new_collision = False
+        self.change_x = 0
+        self.change_y = 0
+        self.collision_id = 0
 
-    def update(self, dt, plat):
-        #print(self.fall_init)
-        plat_collision = self.collide(plat)
-        # self.fly(dt)
-        self.jump(dt)
+    def update(self, dt, platform_list):
         if self.key_handler[key.LSHIFT]:
-            self.walking(dt, plat_collision, plat, walk_speed=self.walk_speed*self.run_speed)
+            self.walking(dt, walk_speed=self.walk_speed*self.run_speed)
         else:
-            self.walking(dt, plat_collision, plat, walk_speed=self.walk_speed)
-        if plat_collision:
-            self.collision_id = plat.platform_id
-        self.gravity(dt, plat_collision, plat)
+            self.walking(dt, walk_speed=self.walk_speed)
 
-    def walking(self, dt, plat_collision, plat, walk_speed):
+        self.calc_grav()
+        self.jump(dt)
+        self.y += self.change_y
+
+        self.x += self.change_x
+        collision_list = self.collide_list(platform_list)
+        for platform in collision_list:
+            if ((self.y - (self.height // 2)) <
+                 (platform.y - (platform.height // 2))):
+                x_adjust = (platform.width // 2) + (self.width // 2)
+                if self.change_x > 0:
+                    self.x = platform.x - x_adjust - 2
+                elif self.change_x < 0:
+                    self.x = platform.x + x_adjust + 2
+
+
+        for platform in collision_list:
+            y_adjust = (platform.height // 2) + (self.height // 2)
+            self.jumping = False
+            if self.change_y > 0:
+                self.y = platform.y - y_adjust
+                self.change_y = 0
+                self.jumping = False
+            elif self.change_y < 0:
+                self.y = platform.y + y_adjust
+                self.change_y = 0
+                self.jumping = False
+
+        self.change_x = 0
+
+
+    def walking(self, dt, walk_speed):
         """Allow pig to walk, and control animation"""
         # If a new collision happens, stop walking
         if self.key_handler[key.RIGHT]:
-            if self.new_collision and self.fall_init < 0.5:
-                self.x -= walk_speed
-                walk_speed = 0
-                self.side_collision = True
-            self.x += walk_speed
+            self.change_x += walk_speed
             if self.image != resources.pigboy_animationR:
                 self.image = resources.pigboy_animationR
-                self.side_collision = False
+                # self.side_collision = False
             self.facing_right = True
 
         if self.key_handler[key.LEFT]:
-            if self.new_collision and self.fall_init < 0.5:
-                self.x += walk_speed
-                walk_speed = 0
-                self.side_collision = True
-            self.x -= walk_speed
+            self.change_x -= walk_speed
             if self.image != resources.pigboy_animationL:
                 self.image = resources.pigboy_animationL
-                self.side_collision = False
+                # self.side_collision = False
             self.facing_right = False
 
         if not self.key_handler[key.RIGHT] | self.key_handler[key.LEFT]:
@@ -77,37 +93,31 @@ class Pigboy(pyglet.sprite.Sprite):
 
     def jump(self, dt):
         """Jump in the air"""
-        if (self.key_handler[key.SPACE] and self.fall_init == 0
-        and not self.jumping):
+        if self.key_handler[key.SPACE] and not self.jumping:
             self.jumping = True
-            self.jump_force = 10
-            self.side_collision = False
+            self.change_y = 15
 
-        if self.jump_force > 0:
-            self.y += self.jump_force
-            self.jump_force -= 0.1
+    def calc_grav(self):
+        """Calculate effect of gravity"""
+        if self.change_y == 0:
+            self.change_y = -1
         else:
-            self.jumping = False
-            self.jump_force = 0
+            self.change_y -= 0.5
 
-    def gravity(self, dt, plat_collision, plat):
+    def gravity(self, dt, collision_list):
         """Enact gravity on the pig."""
-        if not self.side_collision:
-            if plat_collision:
+        self.y -= self.fall_init
+        self.fall_init += 0.1
+
+    def collide_list(self, platform_list):
+        """Check for collision and handle"""
+        return [platform for platform in platform_list
+                if util.point_collide(self, platform)]
+
+    def handle_collisions(self, collide_list):
+        """Deal with platforms in collision list"""
+        for object in collision_list:
+            if self.change_x > 0:
                 self.fall_init = 0
                 self.y = plat.ytop + (self.height // 2)
                 self.falling = False
-            else:
-                self.y -= self.fall_init
-                self.fall_init += 0.1
-
-    def collide(self, plat):
-        """Check for collision and handle"""
-        collision = util.point_collide(self, plat)
-        if collision:
-            if plat.platform_id != self.collision_id:
-                self.new_collision = True
-            else:
-                self.new_collision = False
-            self.collision_id = plat.platform_id
-        return collision
