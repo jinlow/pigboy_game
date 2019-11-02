@@ -3,6 +3,7 @@ from pyglet.window import key
 from . import resources
 from . import util
 import math
+from . import platform
 
 class Pigboy(pyglet.sprite.Sprite):
     """Class for main character Pigboy."""
@@ -12,7 +13,7 @@ class Pigboy(pyglet.sprite.Sprite):
         self.velocity_x, self.velocity_y = 0.0, 0.0
         self.colR = False
         self.colL = False
-        self.walk_speed = 2
+        self.walk_speed = 4
         self.run_speed = 2
         self.key_handler = key.KeyStateHandler()
         self.facing_right = True
@@ -23,28 +24,32 @@ class Pigboy(pyglet.sprite.Sprite):
         self.collision_id = None
         self.side_collision = False
         self.new_collision = False
+        self.y_speed = 8
 
-    def update(self, dt, plat):
-        #print(self.fall_init)
-        plat_collision = self.collide(plat)
-        # self.fly(dt)
-        self.jump(dt)
+    def update(self, dt: int, platform_list: list) -> None:
+        """Process and handle collisions"""
+        y_speed = self.y_speed
+        walk_speed = self.walk_speed
+        for plat in platform_list:
+            if self.collide(plat):
+                print("We've been hit!!!")
+                y_speed = 0
+            else:
+                print("All clear :)")
+        self.walking_or_run(dt, walk_speed=walk_speed)
+        self.fly(dt, y_speed=y_speed)
+
+
+    def walking_or_run(self, dt: int, walk_speed: int) -> None:
+        """Control if the pig is walking or running"""
         if self.key_handler[key.LSHIFT]:
-            self.walking(dt, plat_collision, plat, walk_speed=self.walk_speed*self.run_speed)
+            self._walking(dt, walk_speed=self.walk_speed*self.run_speed)
         else:
-            self.walking(dt, plat_collision, plat, walk_speed=self.walk_speed)
-        if plat_collision:
-            self.collision_id = plat.platform_id
-        self.gravity(dt, plat_collision, plat)
+            self._walking(dt, walk_speed=self.walk_speed)
 
-    def walking(self, dt, plat_collision, plat, walk_speed):
+    def _walking(self, dt: int, walk_speed) -> None:
         """Allow pig to walk, and control animation"""
-        # If a new collision happens, stop walking
         if self.key_handler[key.RIGHT]:
-            if self.new_collision and self.fall_init < 0.5:
-                self.x -= walk_speed
-                walk_speed = 0
-                self.side_collision = True
             self.x += walk_speed
             if self.image != resources.pigboy_animationR:
                 self.image = resources.pigboy_animationR
@@ -52,10 +57,6 @@ class Pigboy(pyglet.sprite.Sprite):
             self.facing_right = True
 
         if self.key_handler[key.LEFT]:
-            if self.new_collision and self.fall_init < 0.5:
-                self.x += walk_speed
-                walk_speed = 0
-                self.side_collision = True
             self.x -= walk_speed
             if self.image != resources.pigboy_animationL:
                 self.image = resources.pigboy_animationL
@@ -68,14 +69,14 @@ class Pigboy(pyglet.sprite.Sprite):
             else:
                 self.image = resources.pigboy_img.get_transform(flip_x=True)
 
-    def fly(self, dt):
+    def fly(self, dt: int, y_speed: int) -> None:
         """Allow Pigboy to fly to test collision"""
         if self.key_handler[key.UP]:
-            self.y += 3
+            self.y += y_speed
         if self.key_handler[key.DOWN]:
-            self.y -= 3
+            self.y -= y_speed
 
-    def jump(self, dt):
+    def jump(self, dt: int) -> None:
         """Jump in the air"""
         if (self.key_handler[key.SPACE] and self.fall_init == 0
         and not self.jumping):
@@ -90,7 +91,7 @@ class Pigboy(pyglet.sprite.Sprite):
             self.jumping = False
             self.jump_force = 0
 
-    def gravity(self, dt, plat_collision, plat):
+    def gravity(self, dt: int, plat_collision: list, plat) -> None:
         """Enact gravity on the pig."""
         if not self.side_collision:
             if plat_collision:
@@ -101,13 +102,7 @@ class Pigboy(pyglet.sprite.Sprite):
                 self.y -= self.fall_init
                 self.fall_init += 0.1
 
-    def collide(self, plat):
+    def collide(self, plat: platform.Platform) -> bool:
         """Check for collision and handle"""
-        collision = util.point_collide(self, plat)
-        if collision:
-            if plat.platform_id != self.collision_id:
-                self.new_collision = True
-            else:
-                self.new_collision = False
-            self.collision_id = plat.platform_id
-        return collision
+        return util.point_collide(self, plat)
+

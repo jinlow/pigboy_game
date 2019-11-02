@@ -25,12 +25,8 @@ def on_draw():
     main_batch.draw()
 
 def update(dt):
-    # pigboy_sprite.update(dt, platform_list)
-    for plat in platform_list:
-        plat.update()
-        pigboy_sprite.update(dt, plat)
+    pigboy_sprite.update(dt, platform_list)
 
-
-if __name__ == '__main__':
+if __name__ == '__main__': 
     pyglet.clock.schedule_interval(update, 1/240.0)
     pyglet.app.run()
