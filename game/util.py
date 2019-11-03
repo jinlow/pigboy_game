@@ -33,16 +33,18 @@ def collide_one_to_one(game_char, platform):
     else:
         return -1
 
-def point_collide(gamechr, plat):
-    """Collision based on point system."""
-    gpts = object_points(gamechr)
-    ppts = object_points(plat)
+def point_collide(x, y):
+    """
+    Collision based on point system.
+        x: object points
+        y: object point
+    """
 
-    x_overlap = not (gpts[0][0] > ppts[1][0] or
-                     gpts[1][0] < ppts[0][0])
+    x_overlap = not (x[0][0] > y[1][0] or
+                     x[1][0] < y[0][0])
 
-    y_overlap = not (gpts[0][1] < ppts[1][1] or
-                     gpts[1][1] > ppts[0][1])
+    y_overlap = not (x[0][1] < y[1][1] or
+                     x[1][1] > y[0][1])
 
     return x_overlap and y_overlap
 
