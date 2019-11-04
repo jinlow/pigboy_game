@@ -20,9 +20,6 @@ def collide_one_to_one(game_char, platform):
     platform_top = platform.position[1]
     platform_bot = platform.position[1] - platform.height
     obj_diff = game_char.position[0] - platform.position[0]
-    # obj_diff_y = game_char.position[1] - platform.position[1]
-    print(str(abs(obj_diff)) + " " + str(side_distance))
-    print(str(math.ceil(game_char_bot / 10)*10) + " " + str(platform_top))
 
     if (math.ceil(game_char_bot / 10)*10 == platform_top and
     abs(obj_diff) <= side_distance):
@@ -49,7 +46,7 @@ def point_collide(x, y):
     return x_overlap and y_overlap
 
 
-def object_points(game_obj):
+def object_points(game_obj) -> list:
     """
     Get the points of a game objects position.
        Return a list of tuples where the following
@@ -57,8 +54,8 @@ def object_points(game_obj):
        point_list -> [(top_left), (bot_right)]
     """
     x, y = game_obj.position
-    xrad = game_obj.width // 2
-    yrad = game_obj.height // 2
+    xrad = game_obj.width / 2
+    yrad = game_obj.height / 2
 
     # Get points of rectangle
     # All points of a rectangle can be derived
