@@ -44,7 +44,6 @@ class Pigboy(pyglet.sprite.Sprite):
         self.x += self.walk_delta
         self.handle_x_collision(platform_list)
 
-
         # Handle Vertical Collision
         self.jump(dt)
         self.y -= self.y_force
@@ -79,8 +78,6 @@ class Pigboy(pyglet.sprite.Sprite):
             self.y = bwind + (self.height / 2)
             for plat in platform_list:
                 plat.y += self.y_force
-
-
 
     def walking_or_run(self, dt: int) -> None:
         """
