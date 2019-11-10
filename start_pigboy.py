@@ -9,7 +9,7 @@ main_batch = pyglet.graphics.Batch()
 # Characters
 pigboy_sprite = pigboy.Pigboy(x=300, y=300, batch=main_batch)
 
-crd_list = [(800, 200), (300, 60), (600, 200), (10, 300)]
+crd_list = [(870, 180), (300, -15), (600, 180), (10, 280)]
 
 platform_list = []
 for crd in crd_list:

@@ -40,13 +40,11 @@ class Pigboy(pyglet.sprite.Sprite):
             to, and for this many platforms it is sufficiently 
             fast.
         """
-        # super(Pigboy, self).update(dt, x=self.x, y=self.y)
-
         # Handle Horizontal collision
         self.walking_or_run(dt)
         self.x += self.walk_delta
         self.handle_x_collision(platform_list)
-        self.handle_camera(platform_list)
+
 
         # Handle Vertical Collision
         self.jump(dt)
@@ -54,19 +52,35 @@ class Pigboy(pyglet.sprite.Sprite):
         self.gravity(dt)
         self.handle_y_collision(platform_list)
 
+        # Handle Camera
+        self.handle_camera(platform_list)
+
     def handle_camera(self, platform_list: list):
         rside = self.x + (self.width / 2)
         lside = self.x - (self.width / 2)
+        tside = self.y + (self.height / 2)
+        bside = self.y - (self.height / 2)
         rwind = (constants.W_WIDTH - 15)
         lwind = 0 + 15
+        twind = (constants.W_HEIGHT - 15)
+        bwind = 0 + 30
         if (rside > rwind) & self.facing_right:
             self.x = rwind - (self.width / 2)
             for plat in platform_list:
                 plat.x -= self.walk_delta
-        if (lside < lwind) and not self.facing_right:
+        elif (lside < lwind) and not self.facing_right:
             self.x = lwind + (self.width / 2)
             for plat in platform_list:
                 plat.x -= self.walk_delta
+        if (tside > twind) and (self.y_force != 0):
+            self.y = twind - (self.height / 2)
+            for plat in platform_list:
+                plat.y += self.y_force
+        elif (bside < bwind) and (self.y_force != 0):
+            self.y = bwind + (self.height / 2)
+            for plat in platform_list:
+                plat.y += self.y_force
+
 
 
     def walking_or_run(self, dt: int) -> None:
