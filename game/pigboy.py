@@ -2,7 +2,6 @@ import pyglet
 from pyglet.window import key
 from . import resources
 from . import util
-import math
 from . import platform
 from . import constants
 
@@ -55,7 +54,7 @@ class Pigboy(pyglet.sprite.Sprite):
         # Handle Camera
         self.handle_camera(platform_list)
 
-    def handle_camera(self, platform_list: list):
+    def handle_camera(self, platform_list: list) -> None:
         rside = self.x + (self.width / 2)
         lside = self.x - (self.width / 2)
         tside = self.y + (self.height / 2)
