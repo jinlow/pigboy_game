@@ -4,6 +4,7 @@ from . import resources
 from . import util
 import math
 from . import platform
+from . import constants
 
 class Pigboy(pyglet.sprite.Sprite):
     """
@@ -21,15 +22,12 @@ class Pigboy(pyglet.sprite.Sprite):
         self.key_handler = key.KeyStateHandler()
         self.facing_right = True
         self.scale = 0.74
-        self.fall_init = 0
         self.jumping = False
         self.y_force = 0
-        self.collision_id = None
-        self.side_collision = False
-        self.new_collision = False
         self.y_speed = 8
         self.gforce = 0.5
         self.jump_force = 15
+        self.walk_delta = 0
 
     def update(self, dt: int, platform_list: list) -> None:
         """
@@ -42,63 +40,62 @@ class Pigboy(pyglet.sprite.Sprite):
             to, and for this many platforms it is sufficiently 
             fast.
         """
-        # Report change in x
-        # TODO: Make this directly handled by object attribute
-        walk_delta = self.walking_or_run(dt)
+        # super(Pigboy, self).update(dt, x=self.x, y=self.y)
 
         # Handle Horizontal collision
-        self.x += walk_delta
-        for plat in self.plat_collide_list(platform_list, -0.5):
-            x_adjust = (plat.width / 2) + (self.width / 2)
-            if walk_delta > 0:
-                self.x = plat.x - x_adjust - 1
-            if walk_delta < 0:
-                self.x = plat.x + x_adjust + 1
+        self.walking_or_run(dt)
+        self.x += self.walk_delta
+        self.handle_x_collision(platform_list)
+        self.handle_camera(platform_list)
 
         # Handle Vertical Collision
         self.jump(dt)
         self.y -= self.y_force
         self.gravity(dt)
-        for plat in self.plat_collide_list(platform_list):
-            y_adjust = (plat.height / 2) + (self.height / 2)
-            if self.y_force < 0:
-                self.y = plat.y - y_adjust - 3
-                self.y_force = 0
-            if self.y_force > 0:
-                self.y = plat.y + y_adjust
-                self.y_force = 0
-                self.jumping = False
+        self.handle_y_collision(platform_list)
 
-    def walking_or_run(self, dt: int) -> int:
+    def handle_camera(self, platform_list: list):
+        rside = self.x + (self.width / 2)
+        lside = self.x - (self.width / 2)
+        rwind = (constants.W_WIDTH - 15)
+        lwind = 0 + 15
+        if (rside > rwind) & self.facing_right:
+            self.x = rwind - (self.width / 2)
+            for plat in platform_list:
+                plat.x -= self.walk_delta
+        if (lside < lwind) and not self.facing_right:
+            self.x = lwind + (self.width / 2)
+            for plat in platform_list:
+                plat.x -= self.walk_delta
+
+
+    def walking_or_run(self, dt: int) -> None:
         """
         Run or Walk:
             Control if the pig is walking or running.
         """
         if self.key_handler[key.LSHIFT]:
-            return self._walking(dt)*self.run_speed
+            self._walking(dt)
+            self.walk_delta = self.walk_delta*self.run_speed
         else:
-            return self._walking(dt)
+            self._walking(dt)
 
-    def _walking(self, dt: int) -> int:
+    def _walking(self, dt: int) -> None:
         """
         Walk that Pig:
             Allow pig to walk, and control animation
         """
-        walk_delta = 0
+        self.walk_delta = 0
         if self.key_handler[key.RIGHT]:
-            # self.x += walk_speed
-            walk_delta = self.walk_speed
+            self.walk_delta = self.walk_speed
             if self.image != resources.pigboy_animationR:
                 self.image = resources.pigboy_animationR
-                self.side_collision = False
             self.facing_right = True
 
         if self.key_handler[key.LEFT]:
-            # self.x -= walk_speed
-            walk_delta = -1*self.walk_speed
+            self.walk_delta = -1*self.walk_speed
             if self.image != resources.pigboy_animationL:
                 self.image = resources.pigboy_animationL
-                self.side_collision = False
             self.facing_right = False
 
         if not self.key_handler[key.RIGHT] | self.key_handler[key.LEFT]:
@@ -106,13 +103,11 @@ class Pigboy(pyglet.sprite.Sprite):
                 self.image = resources.pigboy_img
             else:
                 self.image = resources.pigboy_img.get_transform(flip_x=True)
-        
-        return walk_delta
 
-    def fly(self, dt: int, y_speed: int) -> None:
+    def _fly(self, dt: int, y_speed: int) -> None:
         """
-        Allow Pigboy to fly to test collision
-            - Debugging Function
+        Allow Pigboy to fly:
+            This is a debugging function to help test collision
         """
         if self.key_handler[key.UP]:
             self.y += y_speed
@@ -125,7 +120,6 @@ class Pigboy(pyglet.sprite.Sprite):
             This funtion just provides the upward momentum,
             the gravtiy() method brings the pig back down.
         """
-
         if (self.key_handler[key.SPACE] and self.y_force == 0 and not self.jumping):
             self.jumping = True
             self.y_force = -1*self.jump_force
@@ -165,3 +159,31 @@ class Pigboy(pyglet.sprite.Sprite):
                         self.collide(plat, epsilon)]
 
         return collide_list
+
+    def handle_x_collision(self, platform_list: list) -> None:
+        """
+        Handle X Collision:
+            Deal with a collision with the side of a platform.
+        """
+        for plat in self.plat_collide_list(platform_list, -0.5):
+            x_adjust = (plat.width / 2) + (self.width / 2)
+            if self.walk_delta > 0:
+                self.x = plat.x - x_adjust - 1
+            if self.walk_delta < 0:
+                self.x = plat.x + x_adjust + 1
+
+    def handle_y_collision(self, platform_list: list) -> None:
+        """
+        Handle Y Collision:
+            Deal with collisions where pigboy lands on a 
+            platform, or jumps up into one.
+        """
+        for plat in self.plat_collide_list(platform_list):
+            y_adjust = (plat.height / 2) + (self.height / 2)
+            if self.y_force < 0:
+                self.y = plat.y - y_adjust - 3
+                self.y_force = 0
+            if self.y_force > 0:
+                self.y = plat.y + y_adjust
+                self.y_force = 0
+                self.jumping = False

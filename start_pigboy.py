@@ -1,7 +1,7 @@
 import pyglet
-from game import pigboy, platform, util
+from game import pigboy, platform, util, constants
 
-game_window = pyglet.window.Window(800, 600)
+game_window = pyglet.window.Window(constants.W_WIDTH, constants.W_HEIGHT)
 pyglet.gl.glClearColor(0.3,0.4,0.6,0)
 
 main_batch = pyglet.graphics.Batch()
@@ -9,7 +9,7 @@ main_batch = pyglet.graphics.Batch()
 # Characters
 pigboy_sprite = pigboy.Pigboy(x=300, y=300, batch=main_batch)
 
-crd_list = [(600, 600), (300, 60), (600, 200), (10, 300)]
+crd_list = [(800, 200), (300, 60), (600, 200), (10, 300)]
 
 platform_list = []
 for crd in crd_list:
