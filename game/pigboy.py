@@ -54,28 +54,34 @@ class Pigboy(pyglet.sprite.Sprite):
         self.handle_camera(platform_list)
 
     def handle_camera(self, platform_list: list) -> None:
-        rside = self.x + (self.width / 2)
-        lside = self.x - (self.width / 2)
-        tside = self.y + (self.height / 2)
-        bside = self.y - (self.height / 2)
-        rwind = (constants.W_WIDTH - 15)
-        lwind = 0 + 15
-        twind = (constants.W_HEIGHT - 15)
-        bwind = 0 + 30
-        if (rside > rwind) & self.facing_right:
-            self.x = rwind - (self.width / 2)
+        """
+        Handle Camera Movement:
+            If the character gets to close to the edge of the game 
+            window, stop its movements, and shift all of the 
+            game platforms.
+        """
+        r_side = self.x + (self.width / 2)
+        l_side = self.x - (self.width / 2)
+        t_side = self.y + (self.height / 2)
+        b_side = self.y - (self.height / 2)
+        r_wind = (constants.W_WIDTH - 200)
+        l_wind = 0 + 200
+        t_wind = (constants.W_HEIGHT - 15)
+        b_wind = 0 + 30
+        if (r_side > r_wind) & self.facing_right:
+            self.x = r_wind - (self.width / 2)
             for plat in platform_list:
                 plat.x -= self.walk_delta
-        elif (lside < lwind) and not self.facing_right:
-            self.x = lwind + (self.width / 2)
+        elif (l_side < l_wind) and not self.facing_right:
+            self.x = l_wind + (self.width / 2)
             for plat in platform_list:
                 plat.x -= self.walk_delta
-        if (tside > twind) and (self.y_force != 0):
-            self.y = twind - (self.height / 2)
+        if (t_side > t_wind) and (self.y_force != 0):
+            self.y = t_wind - (self.height / 2)
             for plat in platform_list:
                 plat.y += self.y_force
-        elif (bside < bwind) and (self.y_force != 0):
-            self.y = bwind + (self.height / 2)
+        elif (b_side < b_wind) and (self.y_force != 0):
+            self.y = b_wind + (self.height / 2)
             for plat in platform_list:
                 plat.y += self.y_force
 

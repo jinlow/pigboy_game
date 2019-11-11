@@ -2,5 +2,5 @@
 Game Constants
 """
 
-W_WIDTH = 800
-W_HEIGHT = 600
+W_WIDTH = 1000
+W_HEIGHT = 700
