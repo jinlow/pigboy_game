@@ -1,6 +1,7 @@
 """Contains game resouces used throughout, such as images."""
 import pyglet
 import glob
+import os
 from pyglet.image import Animation
 
 
@@ -17,7 +18,7 @@ image_paths.sort()
 # Create pigboy animation
 pigboy_imgs = []
 for path in image_paths:
-    path = path.split("/")[1]
+    path = os.path.basename(path)
     img = pyglet.resource.image(path)
     img.anchor_x = img.width // 2
     img.anchor_y = img.height // 2
