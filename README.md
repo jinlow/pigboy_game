@@ -12,7 +12,7 @@ This sidescroller game follows the perilous adventures of the young swine known 
 - [ ] Create platforms and enemy class
 - [x] Allow for platform jumping and gravity 
 
-![Game Example](pigboy_test.gif)
+![Game Example](pigboy_game.gif)
 
 ### Testing it Out Yourself
 Testing out the game is as easy as cloning this repository...
