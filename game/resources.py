@@ -1,9 +1,7 @@
-"""Contains game resouces used throughout, such as images."""
 import pyglet
 import glob
 import os
 from pyglet.image import Animation
-
 
 pyglet.resource.path = ['resources']
 pyglet.resource.reindex()
@@ -28,8 +26,6 @@ pigboy_imgsL = []
 for img in pigboy_imgs:
     pigboy_imgsL.append(img.get_transform(flip_x=True))
 
-
-
 pigboy_animationR = Animation.from_image_sequence(pigboy_imgs, 1/20.0)
 pigboy_animationL = Animation.from_image_sequence(pigboy_imgsL, 1/20.0)
 
@@ -37,3 +33,9 @@ pigboy_animationL = Animation.from_image_sequence(pigboy_imgsL, 1/20.0)
 pltfm_short_grass = pyglet.resource.image("platform_grass.png")
 pltfm_short_grass.anchor_x = pltfm_short_grass.width // 2
 pltfm_short_grass.anchor_y = pltfm_short_grass.height // 2
+
+### Enemy Class ###
+enemy_ghostL = pyglet.resource.image("enemies/enemyL0.png")
+enemy_ghostL.anchor_x = enemy_ghostL.width // 2
+enemy_ghostL.anchor_y = enemy_ghostL.height // 2
+enemy_ghostR = enemy_ghostL.get_transform(flip_x=True)

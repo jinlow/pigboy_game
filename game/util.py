@@ -1,3 +1,5 @@
+from . import platform
+from pyglet import sprite
 import math
 import operator as op
 
@@ -64,3 +66,16 @@ def object_points(game_obj) -> list:
     bot_right = (x + xrad), (y - yrad)
 
     return [top_left, bot_right]
+
+def tether_x_range(plat: platform.Platform, char: sprite.Sprite) -> tuple:
+    """
+    Calculate X Range:
+        Given a character, and a platform, where should the 
+        character walk.
+    """
+    plat_end_r = plat.x + (plat.width // 2)
+    plat_end_l = plat.x - (plat.width // 2)
+    char_r = char.width // 2
+
+    return (plat_end_l - char_r, plat_end_r + char_r)
+

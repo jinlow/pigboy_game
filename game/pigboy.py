@@ -13,7 +13,6 @@ class Pigboy(pyglet.sprite.Sprite):
     def __init__(self, *args, **kwargs):
         super().__init__(img=resources.pigboy_img, *args, **kwargs)
 
-        self.velocity_x, self.velocity_y = 0.0, 0.0
         self.colR = False
         self.colL = False
         self.walk_speed = 4.5
@@ -28,7 +27,7 @@ class Pigboy(pyglet.sprite.Sprite):
         self.jump_force = 15
         self.walk_delta = 0
 
-    def update(self, dt: int, platform_list: list) -> None:
+    def update(self, dt: int, platform_list: list, game_list: list) -> None:
         """
         Update Pigboy:
             Process and handle collisions walking and 
@@ -51,7 +50,7 @@ class Pigboy(pyglet.sprite.Sprite):
         self.handle_y_collision(platform_list)
 
         # Handle Camera
-        self.handle_camera(platform_list)
+        self.handle_camera(game_list)
 
     def handle_camera(self, platform_list: list) -> None:
         """
