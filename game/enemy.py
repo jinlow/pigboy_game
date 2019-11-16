@@ -1,4 +1,5 @@
 import pyglet
+import random
 from . import resources
 from . import platform
 from . import util
@@ -31,16 +32,31 @@ class Enemy(pyglet.sprite.Sprite):
             self.x = self.platform.x
 
     def update(self, dt):
+        """
+        Update Enemy:
+            Control what is run each
+            iteration of the game loop.
+        """
+        self.walking()
+    
+    def walking(self) -> None:
+        """
+        Enemy Walk:
+            Control enemy walking and animation.
+        """
+        # Add randomness to walk
+        rand = random.uniform(1, 0)
         self.x += self.walk_speed*self.direction
         plat_edge_r = self.platform.x + (self.platform.width // 2)
         plat_edge_l = self.platform.x - (self.platform.width // 2)
         char_r = self.width // 2
-        if (self.x - char_r) < plat_edge_l:
+        if ((self.x - char_r) < plat_edge_l) or (rand > 0.98):
             self.direction = 1
             self.image = resources.enemy_ghostR
-        if (self.x + char_r) > plat_edge_r:
+        if ((self.x + char_r) > plat_edge_r) or (rand > 0.98):
             self.direction = -1
             self.image = resources.enemy_ghostL
+
 
 
 
