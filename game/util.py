@@ -1,7 +1,6 @@
-from . import platform
 from pyglet import sprite
 import math
-import operator as op
+from . import platform
 
 def distance(point_1=(0, 0), point_2=(0, 0)):
     """Return the distance between two points"""
@@ -9,7 +8,7 @@ def distance(point_1=(0, 0), point_2=(0, 0)):
                 (point_1[1] - point_2[1]) ** 2))
     return euc_dist
 
-def collide_one_to_one(game_char, platform):
+def collide_one_to_one(game_char: sprite.Sprite, platform: sprite.Sprite):
     """
     Check for collision of one object and list of objects.
         Returns:
@@ -32,23 +31,21 @@ def collide_one_to_one(game_char, platform):
     else:
         return -1
 
-def point_collide(x, y):
+def point_collide(x: tuple, y: tuple) -> bool:
     """
     Collision based on point system.
         x: object points
         y: object point
     """
-
     x_overlap = not (x[0][0] > y[1][0] or
                      x[1][0] < y[0][0])
-
     y_overlap = not (x[0][1] < y[1][1] or
                      x[1][1] > y[0][1])
-
+                     
     return x_overlap and y_overlap
 
 
-def object_points(game_obj) -> list:
+def object_points(game_obj: sprite.Sprite) -> tuple:
     """
     Get the points of a game objects position.
        Return a list of tuples where the following
@@ -65,7 +62,7 @@ def object_points(game_obj) -> list:
     top_left = (x - xrad), (y + yrad)
     bot_right = (x + xrad), (y - yrad)
 
-    return [top_left, bot_right]
+    return (top_left, bot_right)
 
 def tether_x_range(plat: platform.Platform, char: sprite.Sprite) -> tuple:
     """
@@ -78,4 +75,3 @@ def tether_x_range(plat: platform.Platform, char: sprite.Sprite) -> tuple:
     char_r = char.width // 2
 
     return (plat_end_l - char_r, plat_end_r + char_r)
-

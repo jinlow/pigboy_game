@@ -29,6 +29,9 @@ for img in pigboy_imgs:
 pigboy_animationR = Animation.from_image_sequence(pigboy_imgs, 1/20.0)
 pigboy_animationL = Animation.from_image_sequence(pigboy_imgsL, 1/20.0)
 
+# Pig lives image
+pig_heart = pyglet.resource.image("extras/pig_heart.png")
+
 ### Platform Resources ###
 pltfm_short_grass = pyglet.resource.image("platform_grass.png")
 pltfm_short_grass.anchor_x = pltfm_short_grass.width // 2

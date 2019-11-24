@@ -1,11 +1,13 @@
 import pyglet
+import time
 from pyglet.window import key
+from pyglet import sprite
 from . import resources
 from . import util
 from . import platform
 from . import constants
 
-class Pigboy(pyglet.sprite.Sprite):
+class Pigboy(sprite.Sprite):
     """
     Base Pigboy Game Character Class:
         Class for main character Pigboy.
@@ -26,8 +28,11 @@ class Pigboy(pyglet.sprite.Sprite):
         self.gforce = 0.5
         self.jump_force = 15
         self.walk_delta = 0
+        self.lives = 3
+        self.enemy_collide = False
+        self.block_time = 0.0
 
-    def update(self, dt: int, platform_list: list, game_list: list) -> None:
+    def update(self, dt: int, platform_list: list, enemy_list: list, lives_list: list) -> None:
         """
         Update Pigboy:
             Process and handle collisions walking and 
@@ -49,8 +54,11 @@ class Pigboy(pyglet.sprite.Sprite):
         self.gravity(dt)
         self.handle_y_collision(platform_list)
 
+        # Handle Enemy Collisions
+        self.handle_enemy_collision(enemy_list, lives_list)
+        
         # Handle Camera
-        self.handle_camera(game_list)
+        self.handle_camera((platform_list + enemy_list))
 
     def handle_camera(self, platform_list: list) -> None:
         """
@@ -202,3 +210,18 @@ class Pigboy(pyglet.sprite.Sprite):
                 self.y = plat.y + y_adjust
                 self.y_force = 0
                 self.jumping = False
+
+    def handle_enemy_collision(self, enemy_list: list, lives_list: list):
+        """
+        Handle Enemy Collision
+            Deal with Pigboys collision with an enemy.
+        """
+        enemy_collide = self.plat_collide_list(enemy_list)
+        if ((len(enemy_collide) > 0) and
+              (len(lives_list) > 0) and 
+              (self.block_time < time.time())):
+            lives_list[0].delete()
+            lives_list.pop(0)
+            self.block_time = (time.time() + 1)
+        elif len(enemy_collide) == 0:
+            self.block_time = 0

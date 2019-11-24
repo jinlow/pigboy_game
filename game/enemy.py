@@ -31,7 +31,7 @@ class Enemy(pyglet.sprite.Sprite):
             self.y = y_up + (self.height // 2)
             self.x = self.platform.x
 
-    def update(self, dt):
+    def update(self, dt: int) -> None:
         """
         Update Enemy:
             Control what is run each
@@ -56,9 +56,3 @@ class Enemy(pyglet.sprite.Sprite):
         if ((self.x + char_r) > plat_edge_r) or (rand > 0.98):
             self.direction = -1
             self.image = resources.enemy_ghostL
-
-
-
-
-
-
